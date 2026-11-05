@@ -6791,13 +6791,6 @@
             "minimum": 1,
             "example": 5
           },
-          "lookbackDays": {
-            "description": "NewValues monitors only. A combination counts as new when it was not seen in this many days.\n",
-            "type": "integer",
-            "format": "int64",
-            "minimum": 1,
-            "example": 7
-          },
           "mplQuery": {
             "description": "MPL (Metrics Processing Language) query string for metrics-based monitoring.\nUse this as an alternative to aplQuery for metrics datasets.\nAt least one of aplQuery or mplQuery must be provided.\n",
             "type": "string",
@@ -6853,7 +6846,7 @@
             "example": true
           },
           "secondDelay": {
-            "description": "Delay in seconds before triggering the alert",
+            "description": "Number of seconds to move each run's query window into the past, so data that arrives late is included.\nFor example, with a value of 300, a run at 10:05 queries up to 10:00.\n",
             "type": "number",
             "format": "int64",
             "maximum": 86400,
@@ -6878,25 +6871,24 @@
             "example": 10
           },
           "triggerAfterNPositiveResults": {
-            "description": "Number of positive results needed before triggering",
+            "description": "Number of runs among the last `triggerFromNRuns` runs, including the current one, that must meet the trigger condition for the monitor to trigger.\nThe current run must always meet it.\nFor example, set both fields to 3 to trigger only after 3 consecutive runs meet the condition.\nIf unset or 0, the first run that meets the condition triggers.\nValues above `triggerFromNRuns` are lowered to it when the monitor is saved.\nApplies to Threshold and AnomalyDetection monitors.\n",
             "type": "number",
             "format": "int64",
-            "example": 2
+            "example": 3
           },
           "triggerFromNRuns": {
-            "description": "Number of consecutive check runs that must fail before triggering an alert.\nUse this to avoid alerting on temporary spikes.\n",
+            "description": "Number of most recent runs, including the current one, that the monitor looks at when deciding whether to trigger.\nHas no effect unless `triggerAfterNPositiveResults` is also set.\nApplies to Threshold and AnomalyDetection monitors.\n",
             "type": "number",
             "format": "int64",
             "example": 3
           },
           "type": {
-            "description": "Type of monitoring check to perform:\n- Threshold: Compares a numeric value against a threshold\n- MatchEvent: Looks for specific events or patterns\n- AnomalyDetection: Identifies unusual patterns based on historical data\n- NewValues: Alerts when the query returns a combination of its columns (aggregates and _time are ignored) not seen within lookbackDays. Each run covers the time since the previous run, so rangeMinutes is ignored.\n",
+            "description": "Type of monitoring check to perform:\n- Threshold: Compares a numeric value against a threshold\n- MatchEvent: Looks for specific events or patterns\n- AnomalyDetection: Identifies unusual patterns based on historical data\n",
             "type": "string",
             "enum": [
               "Threshold",
               "MatchEvent",
-              "AnomalyDetection",
-              "NewValues"
+              "AnomalyDetection"
             ],
             "example": "Threshold"
           }
